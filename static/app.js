@@ -43,43 +43,50 @@ const DESCRIPTIONS_TYPES = {
         emoji: "🏠",
         titre: "Appartement standard",
         description: "1 chambre + 1 salon. Non meublé.",
-        note: "Logement économique pour un couple ou une personne seule."
+        note: "Logement économique pour un couple ou une personne seule.",
+        nb_chambres: 1
     },
     "1 CHAMBRE": {
         emoji: "🏨",
         titre: "Studio meublé haut de gamme",
         description: "Chambre unique meublée et équipée.",
-        note: "Souvent climatisé, dans un quartier standing."
+        note: "Souvent climatisé, dans un quartier standing.",
+        nb_chambres: 1
     },
     "2 CHAMBRES SALON": {
         emoji: "🏡",
         titre: "Appartement 2 chambres",
         description: "2 chambres + 1 salon. Non meublé.",
-        note: "Idéal pour une petite famille ou un couple."
+        note: "Idéal pour une petite famille ou un couple.",
+        nb_chambres: 2
     },
     "3 CHAMBRES SALON": {
         emoji: "🏘️",
         titre: "Appartement familial",
         description: "3 chambres + 1 salon. Non meublé.",
-        note: "Pour une famille de 4 à 5 personnes."
+        note: "Pour une famille de 4 à 5 personnes.",
+        nb_chambres: 3
     },
     "4 CHAMBRES SALON": {
         emoji: "🏛️",
         titre: "Grand appartement",
         description: "4 chambres + 1 salon. Non meublé.",
-        note: "Pour une grande famille."
+        note: "Pour une grande famille.",
+        nb_chambres: 4
     },
     "5 CHAMBRES SALON": {
         emoji: "🏰",
         titre: "Très grand logement",
         description: "5 chambres + 1 salon. Non meublé.",
-        note: "Rare, souvent dans des quartiers premium."
+        note: "Rare, souvent dans des quartiers premium.",
+        nb_chambres: 5
     },
     "ENTREE COUCHEE": {
         emoji: "🛏️",
         titre: "Entrée couchée",
         description: "Chambre simple avec entrée indépendante.",
-        note: "Solution la plus économique du marché."
+        note: "Solution la plus économique du marché.",
+        nb_chambres: 0
     }
 };
 
@@ -106,6 +113,30 @@ function mettreAJourTypeHint() {
         <div class="hint-note">💡 ${info.note}</div>
     `;
     typeHint.classList.add("visible");
+}
+
+/* ============================================================
+   AUTO-REMPLISSAGE DU NOMBRE DE CHAMBRES
+   ============================================================ */
+
+function autoRemplirChambres() {
+    const typeSelectionne = selectTypeBien.value;
+    
+    if (!typeSelectionne || !DESCRIPTIONS_TYPES[typeSelectionne]) {
+        return;
+    }
+
+    const nbChambres = DESCRIPTIONS_TYPES[typeSelectionne].nb_chambres;
+    
+    if (nbChambres !== undefined) {
+        inputNbChambres.value = nbChambres;
+        // Animation visuelle pour montrer la mise à jour
+        inputNbChambres.style.transition = "background-color 0.4s ease";
+        inputNbChambres.style.backgroundColor = "#E8F5E9";
+        setTimeout(() => {
+            inputNbChambres.style.backgroundColor = "";
+        }, 600);
+    }
 }
 
 /* ============================================================
@@ -290,8 +321,11 @@ document.addEventListener("DOMContentLoaded", () => {
     chargerModalites();
     chargerInfoModele();
 
-    // Écouter le changement de type
-    selectTypeBien.addEventListener("change", mettreAJourTypeHint);
+    // Écouter le changement de type → mettre à jour l'encadré ET le nombre de chambres
+    selectTypeBien.addEventListener("change", () => {
+        mettreAJourTypeHint();
+        autoRemplirChambres();
+    });
 
     form.addEventListener("submit", predire);
     btnReset.addEventListener("click", reinitialiser);

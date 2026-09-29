@@ -31,9 +31,86 @@ const modele = document.getElementById("modele");
 const avertissementsBox = document.getElementById("avertissements-box");
 const avertissementsList = document.getElementById("avertissements-list");
 
-// ============================================================
-// CHARGEMENT DES MODALITÉS
-// ============================================================
+// Encadré de description
+const typeHint = document.getElementById("type-hint");
+
+/* ============================================================
+   DESCRIPTIONS CONTEXTUELLES DES TYPES DE BIEN
+   ============================================================ */
+
+const DESCRIPTIONS_TYPES = {
+    "1 CHAMBRE SALON": {
+        emoji: "🏠",
+        titre: "Appartement standard",
+        description: "1 chambre + 1 salon. Non meublé.",
+        note: "Logement économique pour un couple ou une personne seule."
+    },
+    "1 CHAMBRE": {
+        emoji: "🏨",
+        titre: "Studio meublé haut de gamme",
+        description: "Chambre unique meublée et équipée.",
+        note: "Souvent climatisé, dans un quartier standing."
+    },
+    "2 CHAMBRES SALON": {
+        emoji: "🏡",
+        titre: "Appartement 2 chambres",
+        description: "2 chambres + 1 salon. Non meublé.",
+        note: "Idéal pour une petite famille ou un couple."
+    },
+    "3 CHAMBRES SALON": {
+        emoji: "🏘️",
+        titre: "Appartement familial",
+        description: "3 chambres + 1 salon. Non meublé.",
+        note: "Pour une famille de 4 à 5 personnes."
+    },
+    "4 CHAMBRES SALON": {
+        emoji: "🏛️",
+        titre: "Grand appartement",
+        description: "4 chambres + 1 salon. Non meublé.",
+        note: "Pour une grande famille."
+    },
+    "5 CHAMBRES SALON": {
+        emoji: "🏰",
+        titre: "Très grand logement",
+        description: "5 chambres + 1 salon. Non meublé.",
+        note: "Rare, souvent dans des quartiers premium."
+    },
+    "ENTREE COUCHEE": {
+        emoji: "🛏️",
+        titre: "Entrée couchée",
+        description: "Chambre simple avec entrée indépendante.",
+        note: "Solution la plus économique du marché."
+    }
+};
+
+/* ============================================================
+   MISE À JOUR DE L'ENCADRÉ AU CHANGEMENT DE TYPE
+   ============================================================ */
+
+function mettreAJourTypeHint() {
+    const typeSelectionne = selectTypeBien.value;
+    
+    if (!typeSelectionne || !DESCRIPTIONS_TYPES[typeSelectionne]) {
+        typeHint.innerHTML = "";
+        typeHint.classList.remove("visible");
+        return;
+    }
+
+    const info = DESCRIPTIONS_TYPES[typeSelectionne];
+    typeHint.innerHTML = `
+        <div class="hint-header">
+            <span class="hint-emoji">${info.emoji}</span>
+            <span class="hint-titre">${info.titre}</span>
+        </div>
+        <div class="hint-description">${info.description}</div>
+        <div class="hint-note">💡 ${info.note}</div>
+    `;
+    typeHint.classList.add("visible");
+}
+
+/* ============================================================
+   CHARGEMENT DES MODALITÉS
+   ============================================================ */
 
 async function chargerModalites() {
     try {
@@ -69,9 +146,9 @@ function remplirSelect(select, valeurs) {
     });
 }
 
-// ============================================================
-// INFO MODÈLE
-// ============================================================
+/* ============================================================
+   INFO MODÈLE
+   ============================================================ */
 
 async function chargerInfoModele() {
     try {
@@ -87,9 +164,9 @@ async function chargerInfoModele() {
     }
 }
 
-// ============================================================
-// PRÉDICTION
-// ============================================================
+/* ============================================================
+   PRÉDICTION
+   ============================================================ */
 
 async function predire(event) {
     event.preventDefault();
@@ -135,9 +212,9 @@ async function predire(event) {
     }
 }
 
-// ============================================================
-// ÉTATS D'AFFICHAGE
-// ============================================================
+/* ============================================================
+   ÉTATS D'AFFICHAGE
+   ============================================================ */
 
 function cacherTous() {
     resultEmpty.classList.add("hidden");
@@ -190,9 +267,9 @@ function afficherResultat(data) {
     btnSubmit.disabled = false;
 }
 
-// ============================================================
-// RESET
-// ============================================================
+/* ============================================================
+   RESET
+   ============================================================ */
 
 function reinitialiser() {
     form.reset();
@@ -200,15 +277,21 @@ function reinitialiser() {
     cacherTous();
     resultEmpty.classList.remove("hidden");
     btnSubmit.disabled = false;
+    // Cacher l'encadré de description
+    typeHint.innerHTML = "";
+    typeHint.classList.remove("visible");
 }
 
-// ============================================================
-// INIT
-// ============================================================
+/* ============================================================
+   INITIALISATION
+   ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
     chargerModalites();
     chargerInfoModele();
+
+    // Écouter le changement de type
+    selectTypeBien.addEventListener("change", mettreAJourTypeHint);
 
     form.addEventListener("submit", predire);
     btnReset.addEventListener("click", reinitialiser);

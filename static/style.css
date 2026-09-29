@@ -9,19 +9,17 @@
 }
 
 :root {
-    /* Palette principale : bleu nuit profond + or chaud */
-    --primary: #1E3A5F;           /* Bleu nuit */
-    --primary-dark: #0F2540;      /* Plus profond */
-    --primary-light: #2E5480;     /* Plus clair */
-    --primary-pale: #E8EEF5;      /* Fond très clair */
-    --primary-soft: #C7D5E5;      /* Intermédiaire */
+    --primary: #1E3A5F;
+    --primary-dark: #0F2540;
+    --primary-light: #2E5480;
+    --primary-pale: #E8EEF5;
+    --primary-soft: #C7D5E5;
     
-    --accent: #D4A24C;            /* Or chaud */
-    --accent-dark: #B8873A;       /* Or foncé */
-    --accent-light: #F0DCB0;      /* Or clair */
-    --accent-pale: #FBF3E2;       /* Or très clair */
+    --accent: #D4A24C;
+    --accent-dark: #B8873A;
+    --accent-light: #F0DCB0;
+    --accent-pale: #FBF3E2;
     
-    /* Neutres */
     --cream: #FAF8F4;
     --cream-dark: #EFEAE0;
     --ink: #14202E;
@@ -29,7 +27,6 @@
     --ink-muted: #7A8699;
     --ink-light: #B4BCC7;
     
-    /* Sémantique */
     --white: #FFFFFF;
     --success: #2E7D5B;
     --success-bg: #DDF0E6;
@@ -193,7 +190,6 @@ body {
     padding: 56px 0 80px;
 }
 
-/* Hero */
 .hero {
     text-align: center;
     margin-bottom: 56px;
@@ -253,7 +249,6 @@ body {
     margin: 0 auto;
 }
 
-/* Grid */
 .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -267,7 +262,6 @@ body {
     }
 }
 
-/* Cards */
 .card {
     background: var(--white);
     border-radius: var(--radius-lg);
@@ -401,7 +395,6 @@ body {
     margin-top: 28px;
 }
 
-/* Boutons */
 .btn {
     padding: 14px 24px;
     border: none;
@@ -454,6 +447,64 @@ body {
 }
 
 /* ============================================================
+   ENCADRÉ DE DESCRIPTION DES TYPES DE BIEN
+   ============================================================ */
+
+.type-hint {
+    margin-top: 12px;
+    padding: 0 18px;
+    background: linear-gradient(135deg, #F0F7FF 0%, #F5F1FF 100%);
+    border-left: 4px solid var(--primary);
+    border-radius: 10px;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.type-hint.visible {
+    opacity: 1;
+    max-height: 250px;
+    padding: 16px 18px;
+}
+
+.hint-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.hint-emoji {
+    font-size: 24px;
+    line-height: 1;
+}
+
+.hint-titre {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primary-dark);
+}
+
+.hint-description {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+    line-height: 1.5;
+}
+
+.hint-note {
+    font-size: 13px;
+    color: var(--ink-muted);
+    font-style: italic;
+    padding-top: 8px;
+    border-top: 1px solid rgba(30, 58, 95, 0.12);
+    margin-top: 8px;
+    line-height: 1.5;
+}
+
+/* ============================================================
    RÉSULTAT
    ============================================================ */
 
@@ -482,7 +533,6 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* État vide */
 .empty-illustration {
     width: 180px;
     height: 150px;
@@ -519,7 +569,6 @@ body {
     font-weight: 700;
 }
 
-/* Loading */
 .loader {
     position: relative;
     width: 84px;
@@ -555,7 +604,6 @@ body {
     font-weight: 500;
 }
 
-/* Erreur */
 .error-icon-box {
     width: 76px;
     height: 76px;
@@ -589,7 +637,6 @@ body {
     border: 1px solid #FBB;
 }
 
-/* Succès */
 #result-success {
     justify-content: flex-start;
     padding: 0;
@@ -670,7 +717,6 @@ body {
     color: var(--accent-light);
 }
 
-/* Confidence */
 .confidence-block {
     background: var(--cream);
     border-radius: var(--radius-sm);
@@ -765,7 +811,6 @@ body {
     font-weight: 600;
 }
 
-/* Details */
 .details-block {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -798,7 +843,6 @@ body {
     text-transform: capitalize;
 }
 
-/* Avertissements */
 .avertissements {
     background: var(--warning-bg);
     border: 1px solid var(--accent-light);
@@ -901,7 +945,6 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* Note */
 .note-section {
     max-width: 720px;
     margin: 0 auto;

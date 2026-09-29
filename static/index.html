@@ -84,6 +84,10 @@
                             <select id="type_bien" name="type_bien" required>
                                 <option value="">Sélectionnez le type…</option>
                             </select>
+                            <!-- ═══════════════════════════════════════════════ -->
+                            <!-- Encadré de description contextuelle -->
+                            <!-- ═══════════════════════════════════════════════ -->
+                            <div class="type-hint" id="type-hint"></div>
                         </div>
 
                         <div class="form-group">
@@ -152,13 +156,11 @@
                     <div class="result-state" id="result-empty">
                         <div class="empty-illustration">
                             <svg viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <!-- Maison stylisée -->
                                 <rect x="70" y="80" width="60" height="60" rx="4" fill="var(--primary-pale)" stroke="var(--primary)" stroke-width="2.5"/>
                                 <path d="M60 85L100 50L140 85" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                                 <rect x="92" y="105" width="16" height="20" rx="2" fill="var(--primary)"/>
                                 <rect x="78" y="95" width="8" height="8" rx="1.5" fill="var(--primary)" opacity="0.5"/>
                                 <rect x="114" y="95" width="8" height="8" rx="1.5" fill="var(--primary)" opacity="0.5"/>
-                                <!-- Graphique -->
                                 <path d="M45 130L55 118L65 122L75 108L85 112L95 100L105 104L115 92L125 96L135 84L145 88L155 76" 
                                       stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.7"/>
                                 <circle cx="155" cy="76" r="4" fill="var(--accent)"/>
@@ -193,7 +195,7 @@
                     </div>
 
                     <!-- Succès -->
-                    <div class="result-state" id="result-success">
+                    <div class="result-state hidden" id="result-success">
                         <div class="price-hero">
                             <div class="price-hero-label">Prix estimé du logement</div>
                             <div class="price-hero-value">

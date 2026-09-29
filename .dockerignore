@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Git
+.git
+.gitignore
+
+# Sorties d'analyse (trop lourdes, pas nécessaires à l'app)
+analyse_output/
+experimentations_output/
+explicabilite_output/
+
+# Documentation
+docs/
+README.md
+
+# Fichiers temporaires
+catboost_info/
+*.log

@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+joblib
+numpy
+pandas
+catboost
+scikit-learn
+pydantic
+python-multipart
+catboost>=1.2.0

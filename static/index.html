@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogiPrix — L'intelligence qui estime votre logement</title>
+    <meta name="description" content="Estimez le prix d'un logement au Bénin grâce à l'intelligence artificielle et aux données du marché immobilier.">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-content">
+            <a href="/" class="logo">
+                <div class="logo-mark">
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 4L4 13V28H12V21H20V28H28V13L16 4Z" 
+                              fill="currentColor" 
+                              stroke="currentColor" 
+                              stroke-width="2" 
+                              stroke-linejoin="round"/>
+                        <path d="M13 15H19V20H13V15Z" fill="white"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-name">LogiPrix</span>
+                    <span class="logo-tagline">L'intelligence immobilière</span>
+                </div>
+            </a>
+            <nav class="header-nav">
+                <a href="#about" class="nav-link">Comment ça marche</a>
+                <a href="/docs" target="_blank" class="nav-link nav-link-api">
+                    <span>API</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                        <path d="M7 17L17 7M17 7H8M17 7V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="main">
+        <div class="container">
+            <!-- Hero -->
+            <section class="hero">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    <span>Propulsé par l'IA</span>
+                </div>
+                <h1 class="hero-title">
+                    Estimez le prix de votre logement
+                    <span class="hero-accent">en quelques secondes</span>
+                </h1>
+                <p class="hero-subtitle">
+                    LogiPrix analyse les données du marché immobilier béninois 
+                    et vous donne une estimation fiable, instantanément.
+                </p>
+            </section>
+
+            <div class="grid">
+                <!-- Formulaire -->
+                <div class="card form-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M3 9L12 3L21 9V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V9Z" 
+                                      stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                                <path d="M9 21V13H15V21" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="card-title">Décrivez votre bien</h2>
+                            <p class="card-subtitle">Renseignez les caractéristiques du logement</p>
+                        </div>
+                    </div>
+
+                    <form id="form-prediction">
+                        <div class="form-group">
+                            <label for="type_bien">Type de bien</label>
+                            <select id="type_bien" name="type_bien" required>
+                                <option value="">Sélectionnez le type…</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nb_chambres">Nombre de chambres</label>
+                            <input type="number" id="nb_chambres" name="nb_chambres"
+                                   min="0" max="10" step="1" value="2" required>
+                            <small class="form-hint">💡 Entrée couchée = 0 chambre</small>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="commune">Commune</label>
+                                <select id="commune" name="commune" required>
+                                    <option value="">Sélectionnez…</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="arrondissement">Arrondissement</label>
+                                <select id="arrondissement" name="arrondissement" required>
+                                    <option value="">Sélectionnez…</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quartier">Quartier</label>
+                            <select id="quartier" name="quartier" required>
+                                <option value="">Sélectionnez le quartier…</option>
+                            </select>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="btn-submit">
+                                <span>Estimer le prix</span>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                    <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                            <button type="button" class="btn btn-ghost" id="btn-reset" title="Réinitialiser">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                    <path d="M3 12a9 9 0 1 0 3-6.7L3 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M3 3v5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Résultat -->
+                <div class="card result-card" id="result-card">
+                    <div class="card-header">
+                        <div class="card-icon card-icon-accent">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" 
+                                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="card-title">Estimation</h2>
+                            <p class="card-subtitle">Résultat instantané</p>
+                        </div>
+                    </div>
+
+                    <!-- État vide -->
+                    <div class="result-state" id="result-empty">
+                        <div class="empty-illustration">
+                            <svg viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Maison stylisée -->
+                                <rect x="70" y="80" width="60" height="60" rx="4" fill="var(--primary-pale)" stroke="var(--primary)" stroke-width="2.5"/>
+                                <path d="M60 85L100 50L140 85" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                <rect x="92" y="105" width="16" height="20" rx="2" fill="var(--primary)"/>
+                                <rect x="78" y="95" width="8" height="8" rx="1.5" fill="var(--primary)" opacity="0.5"/>
+                                <rect x="114" y="95" width="8" height="8" rx="1.5" fill="var(--primary)" opacity="0.5"/>
+                                <!-- Graphique -->
+                                <path d="M45 130L55 118L65 122L75 108L85 112L95 100L105 104L115 92L125 96L135 84L145 88L155 76" 
+                                      stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.7"/>
+                                <circle cx="155" cy="76" r="4" fill="var(--accent)"/>
+                            </svg>
+                        </div>
+                        <h3 class="empty-title">Prêt à estimer</h3>
+                        <p class="empty-text">
+                            Remplissez le formulaire<br>
+                            puis cliquez sur <strong>Estimer le prix</strong>
+                        </p>
+                    </div>
+
+                    <!-- Loading -->
+                    <div class="result-state hidden" id="result-loading">
+                        <div class="loader">
+                            <div class="loader-ring"></div>
+                            <div class="loader-icon">🏠</div>
+                        </div>
+                        <p class="loading-text">Analyse du marché en cours…</p>
+                    </div>
+
+                    <!-- Erreur -->
+                    <div class="result-state hidden" id="result-error">
+                        <div class="error-icon-box">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <h3 class="error-title">Impossible d'estimer</h3>
+                        <p class="error-message" id="error-message"></p>
+                    </div>
+
+                    <!-- Succès -->
+                    <div class="result-state" id="result-success">
+                        <div class="price-hero">
+                            <div class="price-hero-label">Prix estimé du logement</div>
+                            <div class="price-hero-value">
+                                <span id="price-value">--</span>
+                                <span class="price-hero-currency">FCFA</span>
+                            </div>
+                            <div class="price-hero-period">par mois</div>
+                        </div>
+
+                        <div class="confidence-block">
+                            <div class="confidence-header">
+                                <span class="confidence-label">Fourchette de confiance</span>
+                                <span class="confidence-badge" id="fiabilite-badge">--</span>
+                            </div>
+                            <div class="confidence-range">
+                                <div class="range-values">
+                                    <span id="interval-low">--</span>
+                                    <span class="range-sep">—</span>
+                                    <span id="interval-high">--</span>
+                                </div>
+                                <div class="range-bar">
+                                    <div class="range-bar-fill"></div>
+                                </div>
+                                <div class="range-unit">90% de probabilité · FCFA</div>
+                            </div>
+                        </div>
+
+                        <div class="details-block">
+                            <div class="detail-item">
+                                <span class="detail-label">Modèle utilisé</span>
+                                <span class="detail-value" id="modele">--</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Fiabilité</span>
+                                <span class="detail-value" id="fiabilite">--</span>
+                            </div>
+                        </div>
+
+                        <div class="avertissements hidden" id="avertissements-box">
+                            <div class="avert-title">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" 
+                                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                À noter
+                            </div>
+                            <ul id="avertissements-list"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info modèle -->
+            <section class="model-info" id="about">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                            <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="info-value" id="info-mae">--</div>
+                    <div class="info-label">Erreur moyenne</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 3v18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M7 14l4-4 4 4 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="info-value" id="info-r2">--</div>
+                    <div class="info-label">Précision (R²)</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="info-value" id="info-dataset">399</div>
+                    <div class="info-label">Annonces analysées</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" 
+                                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="info-value">IA</div>
+                    <div class="info-label">CatBoost</div>
+                </div>
+            </section>
+
+            <!-- Note -->
+            <section class="note-section">
+                <div class="note-content">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <p>
+                        Cette estimation est donnée à titre indicatif. 
+                        Le prix final peut varier selon l'état, l'équipement et la négociation.
+                    </p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo-mark">
+                    <svg viewBox="0 0 32 32" fill="none">
+                        <path d="M16 4L4 13V28H12V21H20V28H28V13L16 4Z" 
+                              fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="footer-brand-text">
+                    <span class="footer-name">LogiPrix</span>
+                    <span class="footer-tagline">L'intelligence qui estime votre logement</span>
+                </div>
+            </div>
+            <p class="footer-copy">© 2026 LogiPrix · Bénin</p>
+        </div>
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

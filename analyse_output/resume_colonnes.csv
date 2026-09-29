@@ -1,0 +1,14 @@
+,dtype,non_nuls,manquants,pct_manquants,uniques
+id,int64,434,0,0.0,434
+type_bien,str,434,0,0.0,7
+nb_chambres,float64,391,43,9.91,5
+prix_fcfa,int64,434,0,0.0,75
+commune,str,433,1,0.23,4
+arrondissement,str,433,1,0.23,26
+quartier,str,434,0,0.0,174
+nom_maison,str,434,0,0.0,211
+nb_photos,int64,434,0,0.0,11
+nb_videos,int64,434,0,0.0,2
+date_creation,str,434,0,0.0,434
+date_maj,str,434,0,0.0,434
+url_annonce,str,434,0,0.0,434

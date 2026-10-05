@@ -34,7 +34,7 @@ from sklearn.model_selection import KFold, cross_val_score, train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
-# CatBoost optionnel (installation : pip install catboost)
+# CatBoost optionnel
 try:
     from catboost import CatBoostRegressor
     CATBOOST_DISPONIBLE = True
@@ -191,12 +191,12 @@ def evaluer(y_true, y_pred, nom: str) -> dict:
 
 CONFIGS = [
     {
-        "nom": "complet",          # 5 features
+        "nom": "complet",
         "drop_colonnes": [],
         "log_cible": True,
     },
     {
-        "nom": "sans_geo",         # 2 features
+        "nom": "sans_geo",
         "drop_colonnes": ["commune", "arrondissement", "quartier"],
         "log_cible": True,
     },
@@ -211,7 +211,6 @@ def entrainer_config(df: pd.DataFrame, config: dict) -> dict:
     """Entraîne tous les modèles pour une configuration donnée."""
     titre(f"CONFIG : {config['nom']}")
 
-    # ─── Préparation X / y ───
     drop = [CIBLE] + [c for c in config["drop_colonnes"] if c in df.columns]
     X = df.drop(columns=drop).reset_index(drop=True)
     y = df[CIBLE].reset_index(drop=True)
@@ -222,13 +221,11 @@ def entrainer_config(df: pd.DataFrame, config: dict) -> dict:
     print(f"  Features ({X.shape[1]}) : {list(X.columns)}")
     print(f"  Cible : {'log1p(prix)' if config['log_cible'] else 'prix brut'}")
 
-    # ─── Split ───
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=TEST_SIZE, random_state=RANDOM_STATE,
     )
     print(f"\n  Split : train={len(X_train)} | test={len(X_test)}")
 
-    # ─── Entraînement de tous les modèles ───
     modeles = obtenir_modeles()
     resultats = []
     pipelines = {}
@@ -286,7 +283,7 @@ def validation_croisee(pipeline, X_train, y_train):
 
 
 # ============================================================
-# BOOTSTRAP POUR INTERVALLES DE CONFIANCE
+# BOOTSTRAP
 # ============================================================
 
 def entrainer_bootstrap(X_train, y_train, modele_base, log_cible: bool,
@@ -333,18 +330,14 @@ def sauvegarder_modele(resultat: dict, bootstrap_actif: bool = True):
     print(f"     RMSE = {meilleur['RMSE']:,.0f} FCFA")
     print(f"     R²   = {meilleur['R2']:.4f}")
 
-    # Réentraînement sur tout le train (déjà fait normalement)
     pipeline.fit(X_train, y_train)
 
-    # Bootstrap pour IC
     modeles_boot = []
     if bootstrap_actif and N_BOOTSTRAP > 0:
-        # Récupérer le modèle non-wrapé
         modele_base = pipeline.named_steps["modele"]
         if hasattr(modele_base, "regressor_"):
             modele_base = modele_base.regressor_
 
-        # Créer une copie fraîche pour le bootstrap
         from sklearn.base import clone
         modele_boot_base = clone(modele_base)
 
@@ -356,7 +349,6 @@ def sauvegarder_modele(resultat: dict, bootstrap_actif: bool = True):
             print(f"  ⚠ Bootstrap échoué : {e}")
             modeles_boot = []
 
-    # Sauvegarde
     chemin = DOSSIER_MODELE / FICHIER_MODELE
     joblib.dump({
         "pipeline": pipeline,
@@ -388,12 +380,10 @@ def main():
 
     df = charger_dataset()
 
-    # ─── Entraîner toutes les configurations ───
     resultats_par_config = {}
     for config in CONFIGS:
         resultats_par_config[config["nom"]] = entrainer_config(df, config)
 
-    # ─── Comparer les configs ───
     titre("COMPARAISON DES CONFIGURATIONS")
 
     comparaison = []
@@ -411,7 +401,6 @@ def main():
     df_comp = pd.DataFrame(comparaison).sort_values("MAE").reset_index(drop=True)
     print("\n" + df_comp.to_string(index=False))
 
-    # ─── Validation croisée du gagnant ───
     titre("VALIDATION CROISÉE DU GAGNANT")
     config_gagnante = df_comp.iloc[0]["config"]
     res_gagnant = resultats_par_config[config_gagnante]
@@ -424,11 +413,9 @@ def main():
         res_gagnant["y_train"],
     )
 
-    # ─── Sauvegarde du meilleur ───
     titre("SAUVEGARDE DU MEILLEUR MODÈLE")
     nom_final = sauvegarder_modele(res_gagnant, bootstrap_actif=True)
 
-    # ─── Résumé final ───
     titre("RÉSULTAT FINAL")
 
     meilleur_global = res_gagnant["df_res"].iloc[0]
@@ -442,7 +429,6 @@ def main():
   Log-transform  : {'Oui' if res_gagnant['log_cible'] else 'Non'}
 """)
 
-    # ─── Comparaison détaillée des 2 configs ───
     print("\n  Détail par configuration :\n")
     for nom, res in resultats_par_config.items():
         print(f"  ── {nom.upper()} ──")

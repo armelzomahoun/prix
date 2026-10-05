@@ -413,3 +413,12 @@ if __name__ == "__main__":
     print("=" * 78 + "\n")
 
     uvicorn.run(app, host=API_HOST, port=API_PORT, reload=False, log_level="info")
+
+
+
+
+
+
+
+
+    

@@ -36,7 +36,7 @@ from config import (
     DOSSIER_RACINE,
     DOSSIER_ANALYSE,
     FICHIER_SOURCE,
-    FICHIER_CLEAN,              # ← AJOUTE CETTE LIGNE
+    FICHIER_CLEAN,
     MOTS_EXCLUS,
     QUANTILE_OUTLIER,
     SEUIL_QUARTIER_RARE,
@@ -122,7 +122,7 @@ def audit(df: pd.DataFrame) -> None:
 
     print(f"\nDoublons exacts : {df.duplicated().sum()}")
 
-    # ─── NOUVEAU : Graphique valeurs manquantes ───
+    # ─── Graphique valeurs manquantes ───
     manquants = df.isna().sum().sort_values(ascending=False)
     manquants = manquants[manquants > 0]
 
@@ -150,6 +150,7 @@ def extraire_features(df: pd.DataFrame) -> pd.DataFrame:
     """Extrait des features depuis les colonnes textuelles."""
     titre("2 — EXTRACTION DE FEATURES OPTIONNELLES")
 
+    # ─── est_meuble : détecte "meublé" dans nom_maison ───
     motif_meuble = r"meubl|equip|furnished|climatis|clim"
 
     if "nom_maison" in df.columns:
@@ -167,6 +168,7 @@ def extraire_features(df: pd.DataFrame) -> pd.DataFrame:
     else:
         print("  est_meuble  : colonne 'nom_maison' absente → ignoré")
 
+    # ─── surface_m2 : extrait "45 m²" depuis nom_maison ───
     motif_surface = r"(\d+)\s*m[²2]"
 
     if "nom_maison" in df.columns:
@@ -343,10 +345,6 @@ def analyse_prix(df: pd.DataFrame) -> None:
     ax.set_xlabel("log(1 + prix)")
     sauvegarder(fig, "03_distribution_log_prix.png")
 
-    # ═══════════════════════════════════════════════════════════
-    # NOUVEAUX GRAPHIQUES
-    # ═══════════════════════════════════════════════════════════
-
     # ─── Graphique 4 : Violin plot ───
     fig, ax = plt.subplots(figsize=(8, 6))
     parts = ax.violinplot(prix, showmeans=True, showmedians=True)
@@ -372,7 +370,7 @@ def analyse_prix(df: pd.DataFrame) -> None:
     ax.set_title("QQ-plot : prix vs distribution normale")
     sauvegarder(fig, "05_qqplot_prix.png")
 
-    # ─── Graphique 6 : CDF (distribution cumulative) ───
+    # ─── Graphique 6 : CDF ───
     fig, ax = plt.subplots(figsize=(10, 5))
     prix_sorted = np.sort(prix)
     cdf = np.arange(1, len(prix_sorted) + 1) / len(prix_sorted) * 100
@@ -387,7 +385,7 @@ def analyse_prix(df: pd.DataFrame) -> None:
     ax.grid(alpha=0.3)
     sauvegarder(fig, "06_cdf_prix.png")
 
-    # ─── Graphique 7 : Boxplot avec valeurs (strip) ───
+    # ─── Graphique 7 : Boxplot avec strip ───
     fig, ax = plt.subplots(figsize=(10, 4))
     ax.boxplot(prix, orientation="horizontal",
                patch_artist=True,
@@ -432,10 +430,6 @@ def graphique_groupe(df: pd.DataFrame, colonne: str, rotation: int = 0) -> None:
     ax.tick_params(axis="x", rotation=rotation)
     sauvegarder(fig, f"04_boxplot_{colonne}.png")
 
-    # ═══════════════════════════════════════════════════════════
-    # NOUVEAUX GRAPHIQUES PAR GROUPE
-    # ═══════════════════════════════════════════════════════════
-
     # ─── Barplot moyenne + médiane ───
     stats = (df.groupby(colonne)[CIBLE]
              .agg(nombre="count", moyenne="mean", mediane="median")
@@ -458,7 +452,7 @@ def graphique_groupe(df: pd.DataFrame, colonne: str, rotation: int = 0) -> None:
         ax.grid(axis="y", alpha=0.3)
         sauvegarder(fig, f"05_barplot_{colonne}.png")
 
-        # ─── Camembert des effectifs ───
+        # ─── Camembert ───
         if len(stats) <= 10:
             fig, ax = plt.subplots(figsize=(9, 9))
             colors = sns.color_palette("Blues_r", len(stats))
@@ -496,7 +490,7 @@ def analyse_correlations(df: pd.DataFrame) -> None:
     ax.set_title("Matrice de corrélation")
     sauvegarder(fig, "05_correlation.png")
 
-    # ─── NOUVEAU : Scatter matrix ───
+    # ─── Scatter matrix ───
     if num.shape[1] >= 2 and num.shape[1] <= 6:
         try:
             fig = sns.pairplot(num, diag_kind="hist",
@@ -546,16 +540,14 @@ def tests_statistiques(df: pd.DataFrame) -> None:
 
 
 # ============================================================
-# 9. NOUVELLE SECTION : GRAPHIQUES AVANCÉS
+# 9. GRAPHIQUES AVANCÉS
 # ============================================================
 
 def graphiques_avances(df: pd.DataFrame) -> None:
     """Graphiques supplémentaires : Pareto, treemap, heatmap croisée."""
     titre("8 — GRAPHIQUES AVANCÉS")
 
-    # ═══════════════════════════════════════════════════════════
-    # Graphique A : Pareto des quartiers
-    # ═══════════════════════════════════════════════════════════
+    # ─── Pareto des quartiers ───
     if "quartier" in df.columns:
         stats = df["quartier"].value_counts()
         cumul = stats.cumsum() / stats.sum() * 100
@@ -581,9 +573,7 @@ def graphiques_avances(df: pd.DataFrame) -> None:
         ax1.grid(axis="y", alpha=0.3)
         sauvegarder(fig, "08_pareto_quartiers.png")
 
-    # ═══════════════════════════════════════════════════════════
-    # Graphique B : Heatmap type_bien × commune
-    # ═══════════════════════════════════════════════════════════
+    # ─── Heatmap type_bien × commune ───
     if "type_bien" in df.columns and "commune" in df.columns:
         pivot = df.pivot_table(
             values=CIBLE, index="type_bien", columns="commune",
@@ -596,9 +586,7 @@ def graphiques_avances(df: pd.DataFrame) -> None:
             ax.set_title("Prix médian : type_bien × commune")
             sauvegarder(fig, "09_heatmap_type_commune.png")
 
-    # ═══════════════════════════════════════════════════════════
-    # Graphique C : Count plot par quartier (top 20)
-    # ═══════════════════════════════════════════════════════════
+    # ─── Top 20 quartiers par volume ───
     if "quartier" in df.columns:
         top20 = df["quartier"].value_counts().head(20).iloc[::-1]
         fig, ax = plt.subplots(figsize=(11, 8))
@@ -611,9 +599,7 @@ def graphiques_avances(df: pd.DataFrame) -> None:
         ax.grid(axis="x", alpha=0.3)
         sauvegarder(fig, "10_top20_quartiers_volume.png")
 
-    # ═══════════════════════════════════════════════════════════
-    # Graphique D : Stacked barplot type_bien × commune
-    # ═══════════════════════════════════════════════════════════
+    # ─── Stacked barplot type_bien × commune ───
     if "type_bien" in df.columns and "commune" in df.columns:
         cross = pd.crosstab(df["type_bien"], df["commune"])
         if not cross.empty:
@@ -628,9 +614,7 @@ def graphiques_avances(df: pd.DataFrame) -> None:
             ax.grid(axis="y", alpha=0.3)
             sauvegarder(fig, "11_stacked_type_commune.png")
 
-    # ═══════════════════════════════════════════════════════════
-    # Graphique E : Scatter prix vs nb_chambres (coloré par commune)
-    # ═══════════════════════════════════════════════════════════
+    # ─── Scatter prix vs nb_chambres ───
     if "nb_chambres" in df.columns and "commune" in df.columns:
         fig, ax = plt.subplots(figsize=(11, 6))
         for commune, color in zip(df["commune"].unique(),
@@ -640,7 +624,6 @@ def graphiques_avances(df: pd.DataFrame) -> None:
                        alpha=0.5, s=50, label=commune,
                        color=color, edgecolor="white", linewidth=0.5)
 
-        # Ligne de tendance
         z = np.polyfit(df["nb_chambres"], df[CIBLE], 1)
         p = np.poly1d(z)
         x_line = np.linspace(df["nb_chambres"].min(),
@@ -656,9 +639,7 @@ def graphiques_avances(df: pd.DataFrame) -> None:
         ax.grid(alpha=0.3)
         sauvegarder(fig, "12_scatter_chambres_prix.png")
 
-    # ═══════════════════════════════════════════════════════════
-    # Graphique F : Distribution par arrondissement (top 10)
-    # ═══════════════════════════════════════════════════════════
+    # ─── Top 10 arrondissements ───
     if "arrondissement" in df.columns:
         top10 = (df.groupby("arrondissement")[CIBLE]
                  .agg(["count", "median"])
@@ -720,9 +701,6 @@ def main():
     analyse_correlations(df)
     tests_statistiques(df)
 
-    # ═══════════════════════════════════════════════════════════
-    # NOUVELLE SECTION
-    # ═══════════════════════════════════════════════════════════
     graphiques_avances(df)
 
     titre("RÉSUMÉ FINAL")
@@ -735,7 +713,6 @@ def main():
     print(f"\n  Prix : médiane = {df[CIBLE].median():,.0f} FCFA | "
           f"moyenne = {df[CIBLE].mean():,.0f} FCFA")
 
-    # Compter les graphiques générés
     n_png = len(list(DOSSIER_ANALYSE.glob("*.png")))
     print(f"\n  📊 {n_png} graphiques générés dans {DOSSIER_ANALYSE}")
 
